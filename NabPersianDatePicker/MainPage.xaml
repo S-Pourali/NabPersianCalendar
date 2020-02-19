@@ -1,0 +1,388 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage
+    x:Class="NabPersianDatePicker.MainPage"
+    xmlns="http://xamarin.com/schemas/2014/forms"
+    xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+    xmlns:d="http://xamarin.com/schemas/2014/forms/design"
+    xmlns:local="clr-namespace:NabPersianDatePicker"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    x:Name="PersianCalendarView"
+    FlowDirection="RightToLeft"
+    mc:Ignorable="d">
+
+    <ContentPage.Resources>
+        <Style x:Key="DayNameStyle" TargetType="Label">
+            <Setter Property="TextColor" Value="#003D4C" />
+            <Setter Property="FontAttributes" Value="Bold" />
+            <Setter Property="FontSize" Value="22" />
+            <Setter Property="HorizontalOptions" Value="Center" />
+            <Setter Property="VerticalOptions" Value="Center" />
+
+        </Style>
+        <Style x:Key="NavigationButtonStyle" TargetType="ImageButton">
+            <Setter Property="BackgroundColor" Value="Blue" />
+        </Style>
+        <DataTemplate x:Key="TodayItemTemplate">
+            <Button
+                BackgroundColor="#650DE0"
+                BindingContext="{x:Reference PersianCalendarView}"
+                BorderColor="#E3D3F9"
+                BorderWidth="2"
+                Command="{Binding Path=BindingContext.DaySelectedCommand, Source={x:Reference PersianCalendarView}}"
+                CommandParameter="{Binding}"
+                CornerRadius="30"
+                FontAttributes="Bold"
+                FontSize="14"
+                HeightRequest="40"
+                HorizontalOptions="Center"
+                Text="{Binding DisplayDayNo}"
+                TextColor="#E3D3F9"
+                VerticalOptions="Center"
+                WidthRequest="40" />
+        </DataTemplate>
+        <DataTemplate x:Key="NonVacationItemTemplate">
+            <Button
+                BackgroundColor="#E3D3F9"
+                BorderColor="#650DE0"
+                BorderWidth="1.5"
+                Command="{Binding Path=BindingContext.DaySelectedCommand, Source={x:Reference PersianCalendarView}}"
+                CommandParameter="{Binding}"
+                CornerRadius="30"
+                FontAttributes="Bold"
+                FontSize="14"
+                HeightRequest="40"
+                HorizontalOptions="Center"
+                Text="{Binding DisplayDayNo}"
+                TextColor="#003D4C"
+                VerticalOptions="Center"
+                WidthRequest="40" />
+        </DataTemplate>
+        <DataTemplate x:Key="VacationItemTemplate">
+            <Button
+                BackgroundColor="#E3D3F9"
+                BorderColor="#650DE0"
+                BorderWidth="1.5"
+                Command="{Binding Path=BindingContext.DaySelectedCommand, Source={x:Reference PersianCalendarView}}"
+                CommandParameter="{Binding}"
+                CornerRadius="30"
+                FontAttributes="Bold"
+                FontSize="14"
+                HeightRequest="40"
+                HorizontalOptions="Center"
+                Text="{Binding DisplayDayNo}"
+                TextColor="Red"
+                VerticalOptions="Center"
+                WidthRequest="40" />
+        </DataTemplate>
+        <DataTemplate x:Key="NotExistDaysItemTemplate">
+            <Button
+                BackgroundColor="Transparent"
+                CornerRadius="30"
+                FontAttributes="Bold"
+                FontSize="14"
+                HeightRequest="40"
+                HorizontalOptions="Center"
+                TextColor="Black"
+                VerticalOptions="Center"
+                WidthRequest="40" />
+        </DataTemplate>
+
+        <local:DaysTemplateSelector
+            x:Key="DayItemTemplateSelector"
+            DayNotExistTemplate="{x:StaticResource NotExistDaysItemTemplate}"
+            NonVacationDayTemplate="{x:StaticResource NonVacationItemTemplate}"
+            TodayDayTemplate="{x:StaticResource TodayItemTemplate}"
+            VacationDayTemplate="{x:StaticResource VacationItemTemplate}" />
+    </ContentPage.Resources>
+
+    <ContentPage.Content>
+        <Grid
+            x:Name="BodyContent"
+            BackgroundColor="#44859C"
+            HorizontalOptions="FillAndExpand"
+            VerticalOptions="FillAndExpand">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="*" />
+                <RowDefinition Height="5*" />
+                <RowDefinition Height="*" />
+            </Grid.RowDefinitions>
+            <Label
+                Grid.Row="0"
+                Style="{StaticResource DayNameStyle}"
+                Text="{Binding GeneratedDateShamsi}" />
+            <Grid
+                x:Name="ControlBody"
+                Grid.Row="1"
+                Margin="7"
+                Padding="3"
+                HorizontalOptions="FillAndExpand"
+                RowSpacing="2"
+                VerticalOptions="FillAndExpand">
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="auto" />
+                    <RowDefinition Height="auto" />
+                    <RowDefinition Height="*" />
+                    <RowDefinition Height="auto" />
+                </Grid.RowDefinitions>
+                <Frame
+                    Grid.Row="0"
+                    Grid.RowSpan="4"
+                    Margin="5"
+                    BackgroundColor="#D2D3D2"
+                    CornerRadius="20"
+                    HasShadow="True"
+                    HorizontalOptions="Fill"
+                    VerticalOptions="Fill" />
+                <Grid
+                    x:Name="YearBody"
+                    Grid.Row="0"
+                    Margin="15,15,15,0"
+                    HeightRequest="40">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="auto" />
+                        <ColumnDefinition Width="*" />
+                        <ColumnDefinition Width="auto" />
+                    </Grid.ColumnDefinitions>
+                    <BoxView
+                        Grid.Column="0"
+                        Grid.ColumnSpan="3"
+                        BackgroundColor="#E6E8E6"
+                        CornerRadius="25" />
+                    <ImageButton
+                        x:Name="PastYearButton"
+                        Grid.Column="0"
+                        Command="{Binding YearChangedCommand}"
+                        CommandParameter="PastYear"
+                        Source="backarrow.png" />
+                    <Label
+                        x:Name="YearDigit"
+                        Grid.Column="1"
+                        FontSize="25"
+                        HorizontalOptions="Center"
+                        Text="{Binding SelectedYear.YearNo}"
+                        TextColor="#032254"
+                        VerticalOptions="Center" />
+                    <ImageButton
+                        x:Name="NextYearButton"
+                        Grid.Column="2"
+                        Command="{Binding YearChangedCommand}"
+                        CommandParameter="NextYear"
+                        Source="nextarrow.png" />
+                </Grid>
+
+                <Grid
+                    x:Name="MonthBody"
+                    Grid.Row="1"
+                    Margin="15,2"
+                    HeightRequest="40">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="auto" />
+                        <ColumnDefinition Width="*" />
+                        <ColumnDefinition Width="auto" />
+                    </Grid.ColumnDefinitions>
+                    <BoxView
+                        Grid.Column="0"
+                        Grid.ColumnSpan="3"
+                        BackgroundColor="#E6E8E6"
+                        CornerRadius="25" />
+                    <ImageButton
+                        x:Name="PastMonthButton"
+                        Grid.Column="0"
+                        Command="{Binding MonthChangedCommand}"
+                        CommandParameter="PastMonth"
+                        Source="backarrow.png" />
+                    <Label
+                        x:Name="MonthDigit"
+                        Grid.Column="1"
+                        FontSize="25"
+                        HorizontalOptions="Center"
+                        Text="{Binding SelectedMonth.DisplayMonthNo}"
+                        TextColor="#032254"
+                        VerticalOptions="Center" />
+                    <ImageButton
+                        x:Name="NextMonthButton"
+                        Grid.Column="2"
+                        Command="{Binding MonthChangedCommand}"
+                        CommandParameter="NextMonth"
+                        Source="nextarrow.png" />
+                </Grid>
+
+                <Grid
+                    x:Name="DaysBody"
+                    Grid.Row="2"
+                    Margin="7,2,5,7"
+                    Padding="0"
+                    HorizontalOptions="FillAndExpand"
+                    VerticalOptions="FillAndExpand">
+
+                    <Frame
+                        Padding="0"
+                        BackgroundColor="#AAC7D2"
+                        BorderColor="#D2D3D2"
+                        CornerRadius="30"
+                        HasShadow="False"
+                        HorizontalOptions="FillAndExpand"
+                        VerticalOptions="FillAndExpand">
+
+                        <Grid
+                            Margin="2"
+                            Padding="0"
+                            HorizontalOptions="Center"
+                            RowSpacing="1"
+                            VerticalOptions="Fill">
+                            <Grid.RowDefinitions>
+                                <RowDefinition Height="auto" />
+                                <RowDefinition Height="auto" />
+                                <RowDefinition Height="*" />
+                            </Grid.RowDefinitions>
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="auto" />
+                                <ColumnDefinition Width="auto" />
+                                <ColumnDefinition Width="auto" />
+                                <ColumnDefinition Width="auto" />
+                                <ColumnDefinition Width="auto" />
+                                <ColumnDefinition Width="auto" />
+                                <ColumnDefinition Width="auto" />
+                            </Grid.ColumnDefinitions>
+                            <Label
+                                Grid.Row="0"
+                                Grid.Column="0"
+                                Style="{StaticResource DayNameStyle}"
+                                Text="ش" />
+                            <Label
+                                Grid.Row="0"
+                                Grid.Column="1"
+                                Style="{StaticResource DayNameStyle}"
+                                Text="ی" />
+                            <Label
+                                Grid.Row="0"
+                                Grid.Column="2"
+                                Style="{StaticResource DayNameStyle}"
+                                Text="د" />
+                            <Label
+                                Grid.Row="0"
+                                Grid.Column="3"
+                                Style="{StaticResource DayNameStyle}"
+                                Text="س" />
+                            <Label
+                                Grid.Row="0"
+                                Grid.Column="4"
+                                Style="{StaticResource DayNameStyle}"
+                                Text="چ" />
+                            <Label
+                                Grid.Row="0"
+                                Grid.Column="5"
+                                Style="{StaticResource DayNameStyle}"
+                                Text="پ" />
+                            <Label
+                                Grid.Row="0"
+                                Grid.Column="6"
+                                Style="{StaticResource DayNameStyle}"
+                                Text="ج" />
+                            <BoxView
+                                Grid.Row="1"
+                                Grid.Column="0"
+                                Grid.ColumnSpan="7"
+                                Margin="1,3,1,5"
+                                BackgroundColor="#455D6B"
+                                HeightRequest="4"
+                                HorizontalOptions="Fill"
+                                VerticalOptions="Fill" />
+                            <StackLayout
+                                Grid.Row="2"
+                                Grid.Column="0"
+                                Margin="1"
+                                BindableLayout.ItemTemplateSelector="{x:StaticResource DayItemTemplateSelector}"
+                                BindableLayout.ItemsSource="{Binding Saturdays}"
+                                HorizontalOptions="Fill"
+                                VerticalOptions="Fill" />
+
+                            <StackLayout
+                                Grid.Row="2"
+                                Grid.Column="1"
+                                Margin="1"
+                                BindableLayout.ItemTemplateSelector="{x:StaticResource DayItemTemplateSelector}"
+                                BindableLayout.ItemsSource="{Binding Sundays}" />
+                            <StackLayout
+                                Grid.Row="2"
+                                Grid.Column="2"
+                                Margin="1"
+                                BindableLayout.ItemTemplateSelector="{x:StaticResource DayItemTemplateSelector}"
+                                BindableLayout.ItemsSource="{Binding Mondays}" />
+                            <StackLayout
+                                Grid.Row="2"
+                                Grid.Column="3"
+                                Margin="2"
+                                BindableLayout.ItemTemplateSelector="{x:StaticResource DayItemTemplateSelector}"
+                                BindableLayout.ItemsSource="{Binding Tuesdays}" />
+                            <StackLayout
+                                Grid.Row="2"
+                                Grid.Column="4"
+                                Margin="1"
+                                BindableLayout.ItemTemplateSelector="{x:StaticResource DayItemTemplateSelector}"
+                                BindableLayout.ItemsSource="{Binding Wednsdays}" />
+                            <StackLayout
+                                Grid.Row="2"
+                                Grid.Column="5"
+                                Margin="1"
+                                BindableLayout.ItemTemplateSelector="{x:StaticResource DayItemTemplateSelector}"
+                                BindableLayout.ItemsSource="{Binding Thursdays}" />
+                            <StackLayout
+                                Grid.Row="2"
+                                Grid.Column="6"
+                                Margin="1"
+                                BindableLayout.ItemTemplateSelector="{x:StaticResource DayItemTemplateSelector}"
+                                BindableLayout.ItemsSource="{Binding Fridays}" />
+                        </Grid>
+
+                        <!--<FlexLayout
+                            x:Name="DaySection"
+                            Margin="1"
+                            Padding="1"
+                            AlignContent="SpaceAround"
+                            AlignItems="Center"
+                            BindableLayout.ItemsSource="{Binding Days}"
+                            Direction="Row"
+                            HorizontalOptions="Fill"
+                            VerticalOptions="Fill"
+                            Wrap="Wrap">
+                            <BindableLayout.ItemTemplate>
+                                <DataTemplate>
+                                    <StackLayout
+                                        HorizontalOptions="FillAndExpand"
+                                        Orientation="Horizontal"
+                                        VerticalOptions="FillAndExpand">
+                                        <CollectionView
+                                            x:Name="ColView"
+                                            BindingContext="{Binding Source={x:Reference DaySection}}"
+                                            ItemsSource="{Binding Saturdays}">
+                                            <CollectionView.ItemTemplate>
+                                                <DataTemplate>
+                                                    <ViewCell>
+                                                        <Button
+                                                            Command="{Binding DoNothing}"
+                                                            Text="{Binding Source={x:Reference ColView}, Path=DisplayDayNo}"
+                                                            TextColor="Black" />
+                                                    </ViewCell>
+                                                </DataTemplate>
+                                            </CollectionView.ItemTemplate>
+                                        </CollectionView>
+                        -->
+                        <!--<Label
+                                            Margin="8"
+                                            FontSize="25"
+                                            HorizontalOptions="Center"
+                                            Text="{Binding DisplayDayNo}"
+                                            TextColor="WhiteSmoke"
+                                            VerticalOptions="Center" />-->
+                        <!--
+                                    </StackLayout>
+                                </DataTemplate>
+                            </BindableLayout.ItemTemplate>
+                        </FlexLayout>-->
+                    </Frame>
+                </Grid>
+            </Grid>
+        </Grid>
+    </ContentPage.Content>
+</ContentPage>
